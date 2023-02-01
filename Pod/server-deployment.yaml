@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: server-deployment
+  name: server-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: server-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: server-deployment
+    spec:
+      containers:
+      - image: myserver
+        imagePullPolicy: IfNotPresent
+        name: flaskcontainer
+        resources: {}
+        env:
+          - name: API_KEY
+            value: "8479E378-0661-4803-8FAC-801F7EB20BD1"
+          - name: CACHE_TIME
+            value: "300"
+          - name: CURRENCY_NAME
+            value: "btc"
+          - name: SERVER_PORT
+            value: "5000"
+        ports:
+          - containerPort: 5000
+        volumeMounts:
+          - mountPath: ./config.yaml
+            subPath: config.yaml
+            name: config-map
+            readOnly: true
+      volumes:
+        - name: config-map
+          configMap:
+            name: config-map
+status: {}

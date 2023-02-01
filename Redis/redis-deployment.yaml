@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: redis-deployment
+  name: redis-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: redis-deployment
+    spec:
+      containers:
+      - image: myredis
+        imagePullPolicy: IfNotPresent
+        name: rediscontainer
+        resources: {}
+        ports:
+          - containerPort: 6379
+        volumeMounts:
+          - mountPath: ./config.yaml
+            subPath: config.yaml
+            name: redis-config-map
+            readOnly: true
+      volumes:
+        - name: redis-config-map
+          configMap:
+            name: redis-config-map
+        - name: redis-pvc
+          persistentVolumeClaim:
+            claimName: persistant-volume-claim
+status: {}
